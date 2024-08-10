@@ -1,0 +1,25 @@
+.footer 
+	height: 40px
+	padding: 10px 32px
+	display: flex
+	justify-content: space-between
+	align-items: center
+	color: white
+	background: #4f4f4f
+	transform: all .4s
+	img
+		animation-name: pulse
+		animation-duration: 3.0s
+		animation-timing-function: linear
+		animation-direction: alternate
+		animation-iteration-count: infinite
+		animation-play-state: running
+	@keyframes pulse 
+		0% 
+			transform: scale(.5)
+		50% 
+			transform: scale(1)
+			transform: rotate(0deg)
+		100% 
+			transform: scale(1.5)
+			transform: rotate(360deg)
