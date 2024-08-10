@@ -31,15 +31,13 @@ const CustomTable = ({
 	const dispatch = useAppDispatch()
 	const { data, error, isLoading } = useGetRepositoriesQuery({
 		page,
-		sort: '',
-		direction: ''
 	})
 
 	// функция сортировки по кол-ву форков
 	const sortsForks = (): void => {
 		dispatch(sortForks())
 	}
-	
+
 	// функция соритровки по кол-ву звезд
 	const sortsStars = (): void => {
 		dispatch(sortStars())
