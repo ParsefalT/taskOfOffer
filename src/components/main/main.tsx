@@ -1,15 +1,16 @@
 import { useState } from 'react'
 import CustomTable from '../table/table'
 import st from './main.module.sass'
-import {
-	useGetRepositoryDetailsQuery
-} from '../../api/api'
+import { useGetRepositoryDetailsQuery } from '../../api/api'
 import { useAppSelector } from '../../store/store'
 
 const Main = () => {
+	// хук состояния айди для выборки активной строки
 	const [id, setId] = useState<number>()
+	// хук ртк для получения развернутой информации выбранного репазитория
 	const { data } = useGetRepositoryDetailsQuery(Number(id))
-	const welcome = useAppSelector((state) => state.searchText.welcome)
+	// хук начального состояния приложения
+	const welcome = useAppSelector(state => state.searchText.welcome)
 	return (
 		<>
 			{welcome ? (
