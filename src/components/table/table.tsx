@@ -9,8 +9,10 @@ import { TablePagination } from '@mui/material'
 import st from './table.module.sass'
 import { useGetRepositoriesQuery } from '../../api/api'
 import { useState } from 'react'
-import { useAppSelector } from '../../store/store'
+import { useAppDispatch, useAppSelector } from '../../store/store'
+import { sortForks, sortStars, sortDate } from '../../store/sortByNameSlice'
 
+// кастомный компонент table с использование MUI библеотеки
 const CustomTable = ({
 	id,
 	setId
@@ -18,46 +20,47 @@ const CustomTable = ({
 	id?: number
 	setId: (id: number) => void
 }) => {
-	const [page, setPage] = useState(0)
-	const [rowsPerPage, setRowsPerPage] = useState(5)
-	const [filtersByName, setFiltersByName] = useState({
-		countForks: false,
-		countStars: false,
-		date: false
-	})
+	// хук состояния страницы
+	const [page, setPage] = useState<number>(0)
+	// хук состояния колл-ва строк на странице
+	const [rowsPerPage, setRowsPerPage] = useState<number>(5)
+
+	// получения состояния из инпута через хук редакса
 	const text = useAppSelector(state => state.searchText.text)
+	const {date,countForks,countStars} = useAppSelector(state => state.sortByName)
+	const dispatch = useAppDispatch()
 	const { data, error, isLoading } = useGetRepositoriesQuery({
 		page,
 		sort: '',
 		direction: ''
 	})
 
-	const sortForks = () => {
-		setFiltersByName((prev) => {
-			return {...prev, countForks: !prev.countForks }
-		})
+	// функция сортировки по кол-ву форков
+	const sortsForks = (): void => {
+		dispatch(sortForks())
 	}
-	const sortStars = () => {
-		setFiltersByName((prev) => {
-			return {...prev, countStars: !prev.countStars }
-		})
-	}
-	const sortDate = () => {
-		setFiltersByName((prev) => {
-			return {...prev, date: !prev.date }
-		})
+	
+	// функция соритровки по кол-ву звезд
+	const sortsStars = (): void => {
+		dispatch(sortStars())
 	}
 
+	// фнукция для сортировки даты
+	const sortsDate = (): void => {
+		dispatch(sortDate())
+	}
+
+	// функция для изменения страницы
 	const handleChangePage = (
 		event: React.MouseEvent<HTMLButtonElement> | null,
 		newPage: number
-	) => {
+	): void => {
 		setPage(newPage)
 	}
-
+	// функция для показа строк на одной странице
 	const handleChangeRowsPerPage = (
 		event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-	) => {
+	): void => {
 		setRowsPerPage(parseInt(event.target.value))
 	}
 
@@ -67,6 +70,7 @@ const CustomTable = ({
 	if (error) {
 		return <div>Error</div>
 	}
+	// use MUI table
 	return (
 		<div className={st.table}>
 			<TableContainer component={Paper} style={{ maxHeight: '470px' }}>
@@ -97,13 +101,19 @@ const CustomTable = ({
 								Language
 							</TableCell>
 							<TableCell style={{ fontWeight: 'bold' }} align="left">
-								<button className={st.table__sortBtn} onClick={sortForks}>Count forks</button>
+								<button className={st.table__sortBtn} onClick={sortsForks}>
+									Count forks
+								</button>
 							</TableCell>
 							<TableCell style={{ fontWeight: 'bold' }} align="left">
-								<button className={st.table__sortBtn} onClick={sortStars}>Count stars</button>
+								<button className={st.table__sortBtn} onClick={sortsStars}>
+									Count stars
+								</button>
 							</TableCell>
 							<TableCell style={{ fontWeight: 'bold' }} align="left">
-								<button className={st.table__sortBtn} onClick={sortDate}>Data of update</button>
+								<button className={st.table__sortBtn} onClick={sortsDate}>
+									Data of update
+								</button>
 							</TableCell>
 						</TableRow>
 					</TableHead>
@@ -116,11 +126,11 @@ const CustomTable = ({
 									: item.name.toLowerCase().includes(text.toLowerCase())
 							)
 							.sort((a, b) =>
-								filtersByName.countForks
+								countForks
 									? b.forks_count - a.forks_count
-									: filtersByName.countStars
+									: countStars
 									? a.stargazers_count - b.stargazers_count
-									: filtersByName.date
+									: date
 									? new Date(b.updated_at).getDate() -
 									  new Date(a.updated_at).getDate()
 									: 0

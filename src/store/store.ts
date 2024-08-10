@@ -1,3 +1,4 @@
+import { sortByNameSlice } from './sortByNameSlice';
 import { configureStore } from '@reduxjs/toolkit'
 import { githubApi } from '../api/api'
 import { searchSlice } from './searchSlice'
@@ -6,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 export const store = configureStore({
   reducer: {
     searchText: searchSlice.reducer,
+    sortByName: sortByNameSlice.reducer,
     [githubApi.reducerPath]: githubApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>

@@ -4,9 +4,12 @@ import { useAppDispatch } from '../../store/store'
 import st from './header.module.sass'
 import Button from '@mui/material/Button'
 const Header = () => {
+	// хук для контролирования инпута
 	const [changeText, setChangeText] = useState<string>("")
+	// функиця для вызова редурсера редакса
 	const dispatch = useAppDispatch()
 
+	// хук для сброса значения текста 
 	useEffect(() => {
     if (changeText === "") {
       dispatch(setText())

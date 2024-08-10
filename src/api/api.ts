@@ -4,10 +4,11 @@ import { GlobalObject, Repository, RepositoryDetails } from './github-api';
 export const githubApi = createApi({
   reducerPath: 'githubApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://api.github.com/',
+    baseUrl: 'https://api.github.com/', // начальный урл
   }),
   tagTypes: ['Repository'],
   endpoints: (builder) => ({
+    // редурсер получение всех репозиториев
     getRepositories: builder.query<GlobalObject & Repository, {}>({
       query: (params: { page: number; sort: string; direction: string }) => ({
         url: `search/repositories`,
@@ -19,6 +20,7 @@ export const githubApi = createApi({
         },
       }),
     }),
+    // редурсер для получения одного репозитория по id
     getRepositoryDetails: builder.query<RepositoryDetails, number>({
       query: (id: number) => ({
         url: `repositories/${id}`,

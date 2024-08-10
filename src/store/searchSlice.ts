@@ -16,6 +16,7 @@ export const searchSlice = createSlice({
   name: 'searchText',
   initialState,
   reducers: {
+    // редурсер для установки текста для инпута, переиспользуется для поиска 
     setText: (state, actions:PayloadAction<string | undefined>) => {
       if(actions.payload == undefined) {
         state.text = ''
